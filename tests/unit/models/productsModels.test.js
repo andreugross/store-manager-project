@@ -3,25 +3,25 @@ const { expect } = require('chai');
 const { productsModel, connection } = require('../../../src/models');
 const { productsMock } = require('./mocks/productsModels.mock');
 
-describe('Testes de unidade da camada Model', () => {
-  describe('Recuperando a lista de produtos', () => {
+describe('Testes de unidade da camada Model', function () {
+  describe('Recuperando a lista de produtos', function () {
 
     // arranje
-    before(async () => {
-      sinon.stub(connection, 'execute').resolves([productsMock]);
+    beforeEach(async function () {
+      sinon.stub(connection, 'execute').resolves(productsMock);
     });
 
-    after(async () => {
+    afterEach(async function () {
       connection.execute.restore();
     });
 
-    it('Retorna um array com todos os produtos', async () => {
+    it('Retorna um array com todos os produtos', async function () {
       // act
       const result = await productsModel.getAllProducts();
         expect(result).to.be.an('array');
     });
 
-      it('Retorna todos os produtos', async () => {
+      it('Retorna todos os produtos', async function () {
         const response = await productsModel.getAllProducts();
         expect(response).to.be.equal(productsMock)
       });
