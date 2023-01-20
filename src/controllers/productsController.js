@@ -1,4 +1,4 @@
-const productsService = require('../services/productsService');
+const { productsService } = require('../services/index');
 
 const HTTP_STATUS_OK = 200;
 const NOT_FOUND = 404;

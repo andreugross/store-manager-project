@@ -1,69 +1,68 @@
+const chai = require('chai');
 const sinon = require('sinon');
-const productsService = require('../../../src/services/productsService');
-const productsController = require('../../../src/controllers/productsController');
-const { expect } = require('chai');
+const sinonChai = require('sinon-chai');
+const { productsController } = require('../../../src/controllers');
+const { productsService } = require('../../../src/services');
+const { productsMock, oneProductMock } = require('./mocks/productsController.mock');
+
+const { expect } = chai;
+chai.use(sinonChai);
+
 const HTTP_STATUS_OK = 200;
 
-describe('Testa os retornos da função getAllProducts', () => {
-  const req = {};
-  const res = {};
-  const products = [
-    { id: 1, name: 'Martelo de Thor' },
-    { id: 2, name: 'Traje de encolhimento' },
-    { id: 3, name: 'Escudo do Capitão América' },
-  ];
+describe('Testes de unidade da camada Controller', () => {
+  describe('Listando os produtos', () => {
+    const req = {};
+    const res = {};
 
-  before(async () => {
-    res.status = sinon.stub().returns(res);
-    res.json = sinon.stub().returns();
-    sinon.stub(productsService, 'getAllProducts').resolves(products);
+    // arrange
+    before(async () => {
+      res.status = sinon.stub().returns(res);
+      res.json = sinon.stub().returns();
+      sinon.stub(productsService, 'getAllProducts').resolves(productsMock);
+    });
+
+    after(async () => {
+      productsService.getAllProducts.restore();
+    });
+
+    it('Deve retornar o status 200 e a lista', async () => {
+      // act
+      await productsController.getAllProducts(req, res);
+
+      // assert
+      expect(res.status).to.have.been.calledWith(HTTP_STATUS_OK);
+      expect(res.json).to.have.been.calledWith(productsMock);
+    });
   });
 
-  after(async () => {
-    productsService.getAllProducts.restore();
-  });
+  describe('Buscando um produto pelo id', function () {
+    const req = {
+      params: { id: 1 },
+    };
+    const res = {};
 
-  it('testa o http status de retorno ok', async () => {
-    await productsController.getAllProducts(req, res);
-    expect(res.status.calledWith(HTTP_STATUS_OK)).to.be.true;
-  });
+    // arrange
+    before(async () => {
+      res.status = sinon.stub().returns(res);
+      res.json = sinon.stub().returns();
+      sinon.stub(productsService, 'getProductsById').resolves(oneProductMock);
+    });
 
-  it('Retorna o método "json" com um objeto', async () => {
-    await productsController.getAllProducts(req, res);
-    expect(res.json.calledWith(products)).to.be.true;
-  });
-});
+    after(async () => {
+      productsService.getProductsById.restore();
+    });
 
-describe('Testa os retornos da função getProductsById', () => {
-  const req = {};
-  const res = {};
-  const testProducts = [
-    {
-      id: 1,
-      name: 'Martelo de Thor',
-    },
-  ];
 
-  before(async () => {
-    req.params = {
-      id: 1,
-    }
-    res.status = sinon.stub().returns(res);
-    res.json = sinon.stub().returns();
-    sinon.stub(productsService, 'getProductsById').resolves(testProducts);
-  });
+    it('deve responder com 200 e os dados do banco quando existir', async () => {
+      // act
+      await productsController.getProductsById(req, res);
 
-  after(async () => {
-    productsService.getProductsById.restore();
-  });
+      // assert
+      expect(res.status).to.have.been.calledWith(HTTP_STATUS_OK);
+      expect(res.json).to.have.been.calledWith(oneProductMock);
+    });
 
-  it('testa o http status de retorno ok', async () => {
-    await productsController.getProductsById(req, res);
-    expect(res.status.calledWith(HTTP_STATUS_OK)).to.be.true;
-  });
 
-  it('Retorna o método "json" com um objeto', async () => {
-    await productsController.getProductsById(req, res);
-    expect(res.json.calledWith(testProducts)).to.be.true;
   });
 });
