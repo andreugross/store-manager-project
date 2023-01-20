@@ -7,4 +7,6 @@ productsRoute.get('/products', productsController.getAllProducts);
 
 productsRoute.get('/products/:id', productsController.getProductsById);
 
+productsRoute.post('/products', productsController.createProduct);
+
 module.exports = productsRoute;
