@@ -5,7 +5,12 @@ const { productsService } = require('../../../src/services');
 const { productsMock, oneProductMock } = require('./mock/productsServices.mock');
 
 
-describe('Testes de unidade da camada Service', () => {
+describe('Testes de unidade da camada Service', function () {
+
+  afterEach(function () {
+    sinon.restore();
+  });
+
   describe('listagem de produtos', function () {
     it('retorna a lista completa de produtos', async function () {
       // arrange
@@ -19,30 +24,38 @@ describe('Testes de unidade da camada Service', () => {
     });
   });
 
-  describe('busca de um produto por id', function () {
+  describe('busca de um produto pelo ID', function () {
     it('retorna um erro caso receba um ID inválido', async function () {
+      // arrange: Especificamente nesse it não temos um arranjo pois nesse fluxo o model não é chamado!
 
       // act
-      const result = await productsService.getProductsById('la');
+      const result = await productsService.getProductsById(999);
 
       // assert
-      expect(result.type).to.equal(404);
       expect(result.message).to.equal('Product not found');
     });
 
-    it('retorna o produto caso ID existe', async function () {
+    it('retorna um erro caso o produto não exista', async function () {
       // arrange
-      sinon.stub(productsModel, 'getProductsById').resolves(productsMock[0]);
+      sinon.stub(productsService, 'getProductsById').resolves(undefined);
 
       // act
-      const result = await passengerService.getProductsById(1);
+      const result = await await productsController.getProductsById('aaa');
 
       // assert
-      expect(result.type).to.equal(null);
-      expect(result.message).to.equal(productsMock[0]);
+      expect(result.message).to.equal('Product not found');
     });
 
+    it('retorna o produto caso ID existente', async function () {
+      // arrange
+      sinon.stub(productsService, 'getProductsById').resolves(oneProductMock);
 
+      // act
+      const result = await productsService.getProductsById(1);
+
+      // assert
+      expect(res.json).to.have.been.calledWith(oneProductMock);
+    });
   });
 
 });

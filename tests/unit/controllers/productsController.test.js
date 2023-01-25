@@ -8,61 +8,77 @@ const { productsMock, oneProductMock } = require('./mocks/productsController.moc
 const { expect } = chai;
 chai.use(sinonChai);
 
-const HTTP_STATUS_OK = 200;
+describe('Testes de unidade da camada Controller', function () {
 
-describe('Testes de unidade da camada Controller', () => {
-  describe('Listando os produtos', () => {
-    const req = {};
-    const res = {};
+  afterEach(function () {
+    sinon.restore();
+  });
 
-    // arrange
-    before(async () => {
+  describe('Listando os produtos', function () {
+    it('Deve retornar o status 200 e a lista de produtos', async function () {
+      const req = {};
+      const res = {};
+
       res.status = sinon.stub().returns(res);
       res.json = sinon.stub().returns();
-      sinon.stub(productsService, 'getAllProducts').resolves(productsMock);
-    });
+      sinon
+        .stub(productsService, 'getAllProducts')
+        .resolves(productsMock);
 
-    after(async () => {
-      productsService.getAllProducts.restore();
-    });
-
-    it('Deve retornar o status 200 e a lista', async () => {
       // act
       await productsController.getAllProducts(req, res);
 
       // assert
-      expect(res.status).to.have.been.calledWith(HTTP_STATUS_OK);
+      expect(res.status).to.have.been.calledWith(200);
       expect(res.json).to.have.been.calledWith(productsMock);
     });
   });
 
-  describe('Buscando um produto pelo id', function () {
-    const req = {
-      params: { id: 1 },
-    };
-    const res = {};
+  describe('Buscando um produto pelo ID', function () {
 
-    // arrange
-    before(async () => {
+    it('deve responder com 200 e os dados do banco quando existir', async function () {
+      // Arrange
+      const res = {};
+      const req = {};
+      req.params = { id: 1 };
       res.status = sinon.stub().returns(res);
       res.json = sinon.stub().returns();
-      sinon.stub(productsService, 'getProductsById').resolves(oneProductMock);
-    });
+      sinon
+        .stub(productsService, 'getProductsById')
+        .resolves(oneProductMock);
 
-    after(async () => {
-      productsService.getProductsById.restore();
-    });
-
-
-    it('deve responder com 200 e os dados do banco quando existir', async () => {
-      // act
+      // Act
       await productsController.getProductsById(req, res);
 
-      // assert
-      expect(res.status).to.have.been.calledWith(HTTP_STATUS_OK);
+      // Assert
+      expect(res.status).to.have.been.calledWith(200);
       expect(res.json).to.have.been.calledWith(oneProductMock);
     });
+  });
 
+  it('ao passar um id inválido deve retornar um erro', async function () {
+    // Arrange
+    const res = {};
+    const req = {
+      params: { id: 999 }, // passamos aqui um id inválido para forçar o erro esperado
+    };
 
+    res.status = sinon.stub().returns(res);
+    res.json = sinon.stub().returns();
+    // Definimos o dublê do service retornando o contrato definido.
+    sinon
+      .stub(productsService, 'getProductsById')
+      .resolves({ error: { status: 404, message: 'Product not found' },
+      });
+
+    // Act
+    await productsController.getProductsById(req, res);
+
+    // Assert
+    // Avaliamos se chamou `res.status` com o valor 404
+    expect(res.status).to.have.been.calledWith(404);
+    // Avaliamos se chamou `res.status` com a mensagem esperada
+    expect(res.json).to.have.been.calledWith({ message: 'Product not found' },
+    );
   });
 });

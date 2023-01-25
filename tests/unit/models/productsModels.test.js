@@ -1,12 +1,17 @@
 const sinon = require('sinon');
 const { expect } = require('chai');
 const { productsModel, connection } = require('../../../src/models');
-const { productsMock } = require('./mocks/productsModels.mock');
+const { productsMock, newProduct, uptadeProduct } = require('./mocks/productsModels.mock');
 
 describe('Testes de unidade da camada Model', function () {
-  describe('Recuperando a lista de produtos', function () {
 
-    it('Recuperando a lista de produtos', async function () {
+  afterEach(function () {
+    sinon.restore();
+  });
+
+  describe('Listar todos os produtos', function () {
+
+    it('deve retornar todos os produtos', async function () {
       // Arrange
       sinon.stub(connection, 'execute').resolves([productsMock]);
       // Act
@@ -14,14 +19,39 @@ describe('Testes de unidade da camada Model', function () {
       // Assert
       expect(result).to.be.deep.equal(productsMock);
     });
-
-    it('Recuperando um produto a partir do seu id', async function () {
-      // Arrange
-      sinon.stub(connection, 'execute').resolves([[productsMock[0]]]);
-      // Act
-      const result = await productsModel.getProductsById(1);
-      // Assert
-      expect(result).to.be.deep.equal(productsMock[0]);
-    });
   });
+
+  describe('Listar produto pelo ID', function () {
+    it('deve retornar o produto requirido pelo ID', async function () {
+      sinon.stub(connection, 'execute').resolves([[productsMock[0]]]);
+
+      const result = await productsModel.getProductsById(1);
+
+      expect(result).to.be.deep.equal(productsMock[0]);
+    })
+  });
+
+  describe('criar novo produto', function () {
+    it('deve retornar o ID do novo produto', async function () {
+
+      sinon.stub(connection, 'execute').resolves([{ insertId: 4 }])
+
+      const result = await productsModel.createProduct(newProduct)
+
+      expect(typeof result).to.equal('object')
+    })
+  });
+
+  describe('Atualizar um produto', function () {
+    it('deve retornar um produto atualizado', async function () {
+      const productToUpdate = 4;
+
+      sinon.stub(connection, 'execute').resolves();
+
+      const result = await productsModel.updateProduct(productToUpdate, uptadeProduct);
+
+      expect(result).to.be.deep.equal({ id: productToUpdate, ...uptadeProduct });
+    })
+  })
 });
+
