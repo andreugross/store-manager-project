@@ -37,10 +37,10 @@ describe('Testes de unidade da camada Service', function () {
 
     it('retorna um erro caso o produto não exista', async function () {
       // arrange
-      sinon.stub(productsService, 'getProductsById').resolves(undefined);
+      sinon.stub(productsModel, 'getProductsById').resolves(undefined);
 
       // act
-      const result = await await productsController.getProductsById('aaa');
+      const result = await await productsService.getProductsById('aaa');
 
       // assert
       expect(result.message).to.equal('Product not found');
@@ -48,7 +48,7 @@ describe('Testes de unidade da camada Service', function () {
 
     it('retorna o produto caso ID existente', async function () {
       // arrange
-      sinon.stub(productsService, 'getProductsById').resolves(oneProductMock);
+      sinon.stub(productsModel, 'getProductsById').resolves(oneProductMock);
 
       // act
       const result = await productsService.getProductsById(1);
