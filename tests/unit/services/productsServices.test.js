@@ -25,15 +25,6 @@ describe('Testes de unidade de produtos da camada Service', function () {
   });
 
   describe('busca de um produto pelo ID', function () {
-    /* it('retorna um erro caso receba um ID inválido', async function () {
-      // arrange: Especificamente nesse it não temos um arranjo pois nesse fluxo o model não é chamado!
-
-      // act
-      const result = await productsService.getProductsById(999);
-
-      // assert
-      expect(result.message).to.equal('Product not found');
-    }); */
 
     it('deve retornar uma mensagem erro caso o produto não exista', async function () {
       const productId = 21;
@@ -45,9 +36,8 @@ describe('Testes de unidade de produtos da camada Service', function () {
 
       // assert
       // expect(result.type).to.equal('PRODUCT_NOT_FOUND');
-      expect(result.message).to.equal("Product not found");
+      expect(result.error.message).to.equal('Product not found');
     });
   });
-
 });
 

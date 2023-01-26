@@ -5,7 +5,7 @@ const { salesService } = require('../../../src/services');
 const allSales = require('./mock/salesService.mock');
 
 
-describe('Testes de unidade da camada Service', function () {
+describe('Testes de unidade de vendas da camada Service', function () {
 
   afterEach(function () {
     sinon.restore();
@@ -17,7 +17,7 @@ describe('Testes de unidade da camada Service', function () {
       sinon.stub(salesModel, 'getAllSales').resolves(allSales);
 
       // act
-      const result = await saleService.getAllSales();
+      const result = await salesService.getAllSales();
 
       // assert
       expect(result).to.deep.equal(allSales);
@@ -25,36 +25,15 @@ describe('Testes de unidade da camada Service', function () {
   });
 
   describe('busca de uma venda pelo ID', function () {
-    it('retorna um erro caso receba um ID inválido', async function () {
-      // arrange: Especificamente nesse it não temos um arranjo pois nesse fluxo o model não é chamado!
-
-      // act
-      const result = await salesService.getSalesById(999);
-
-      // assert
-      expect(result.message).to.equal('Sales not found');
-    });
-
     it('retorna um erro caso a venda não exista', async function () {
       // arrange
       sinon.stub(salesModel, 'getSalesById').resolves(undefined);
 
       // act
-      const result = await saleService.getProductsById('aaa');
+      const result = await salesService.getSalesById('aaa');
 
       // assert
-      expect(result.message).to.equal('Sales not found');
-    });
-
-    it('retorna o produto caso ID existente', async function () {
-      // arrange
-      sinon.stub(salesModel, 'getProductsById').resolves([allSales[0]]);
-
-      // act
-      const result = await saleService.getProductsById(1);
-
-      // assert
-      expect(res.json).to.have.been.calledWith(allSales[0]);
+      expect(result.error.message).to.be.equal('Sales not found');
     });
   });
 

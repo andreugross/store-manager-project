@@ -66,13 +66,13 @@ describe('Testes de unidade de vendas da camada Controller', function () {
     res.json = sinon.stub().returns();
     // Definimos o dublê do service retornando o contrato definido.
     sinon
-      .stub(salesService, 'getsalesById')
+      .stub(salesService, 'getSalesById')
       .resolves({
         error: { status: 404, message: 'Sale not found' },
       });
 
     // Act
-    await salesController.getsalesById(req, res);
+    await salesController.getSalesById(req, res);
 
     // Assert
     // Avaliamos se chamou `res.status` com o valor 404
