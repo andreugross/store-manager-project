@@ -3,7 +3,7 @@ const { expect } = require('chai');
 const { salesModel, connection } = require('../../../src/models');
 const { allSales } = require('./mocks/salesModels.mock');
 
-describe('Testes de unidade da camada Model', function () {
+describe('Testes de unidade de vendas da camada Model', function () {
 
   afterEach(function () {
     sinon.restore();
@@ -17,13 +17,13 @@ describe('Testes de unidade da camada Model', function () {
       // Act
       const result = await salesModel.getAllSales();
       // Assert
-      expect(typeof result).to.be.deep.equal(allSales);
+      expect(result).to.be.deep.equal(allSales);
     });
   });
 
   describe('Listar produto pelo ID', function () {
     it('deve retornar o produto requirido pelo ID', async function () {
-      sinon.stub(connection, 'execute').resolves([[allSales[0]]]);
+      sinon.stub(connection, 'execute').resolves([allSales[0]]);
 
       const result = await salesModel.getSalesById(1);
 

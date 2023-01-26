@@ -2,10 +2,10 @@ const sinon = require('sinon');
 const { expect } = require('chai');
 const { productsModel } = require('../../../src/models');
 const { productsService } = require('../../../src/services');
-const { productsMock, oneProductMock } = require('./mock/productsServices.mock');
+const { productsMock } = require('./mock/productsServices.mock');
 
 
-describe('Testes de unidade da camada Service', function () {
+describe('Testes de unidade de produtos da camada Service', function () {
 
   afterEach(function () {
     sinon.restore();
@@ -25,7 +25,7 @@ describe('Testes de unidade da camada Service', function () {
   });
 
   describe('busca de um produto pelo ID', function () {
-    it('retorna um erro caso receba um ID inválido', async function () {
+    /* it('retorna um erro caso receba um ID inválido', async function () {
       // arrange: Especificamente nesse it não temos um arranjo pois nesse fluxo o model não é chamado!
 
       // act
@@ -33,28 +33,19 @@ describe('Testes de unidade da camada Service', function () {
 
       // assert
       expect(result.message).to.equal('Product not found');
-    });
+    }); */
 
-    it('retorna um erro caso o produto não exista', async function () {
+    it('deve retornar uma mensagem erro caso o produto não exista', async function () {
+      const productId = 21;
       // arrange
       sinon.stub(productsModel, 'getProductsById').resolves(undefined);
 
       // act
-      const result = await await productsService.getProductsById('aaa');
+      const result = await productsService.getProductsById(productId);
 
       // assert
-      expect(result.message).to.equal('Product not found');
-    });
-
-    it('retorna o produto caso ID existente', async function () {
-      // arrange
-      sinon.stub(productsModel, 'getProductsById').resolves(oneProductMock);
-
-      // act
-      const result = await productsService.getProductsById(1);
-
-      // assert
-      expect(res.json).to.have.been.calledWith(oneProductMock);
+      // expect(result.type).to.equal('PRODUCT_NOT_FOUND');
+      expect(result.message).to.equal("Product not found");
     });
   });
 

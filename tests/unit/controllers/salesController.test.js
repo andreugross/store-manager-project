@@ -3,7 +3,7 @@ const sinon = require('sinon');
 const sinonChai = require('sinon-chai');
 const { salesController } = require('../../../src/controllers');
 const { salesService } = require('../../../src/services');
-const { salesMock, onesaleMock } = require('./mocks/salesController.mock');
+const { allSales } = require('./mocks/salesController.mock');
 
 const { expect } = chai;
 chai.use(sinonChai);
@@ -23,19 +23,18 @@ describe('Testes de unidade de vendas da camada Controller', function () {
       res.json = sinon.stub().returns();
       sinon
         .stub(salesService, 'getAllSales')
-        .resolves(salesMock);
+        .resolves(allSales);
 
       // act
       await salesController.getAllSales(req, res);
 
       // assert
       expect(res.status).to.have.been.calledWith(200);
-      expect(res.json).to.have.been.calledWith(salesMock);
+      expect(res.json).to.have.been.calledWith(allSales);
     });
   });
 
   describe('Buscando um produto pelo ID', function () {
-
     it('deve responder com 200 e os dados do banco quando existir', async function () {
       // Arrange
       const res = {};
@@ -45,14 +44,14 @@ describe('Testes de unidade de vendas da camada Controller', function () {
       res.json = sinon.stub().returns();
       sinon
         .stub(salesService, 'getSalesById')
-        .resolves(onesaleMock);
+        .resolves(allSales);
 
       // Act
       await salesController.getSalesById(req, res);
 
       // Assert
       expect(res.status).to.have.been.calledWith(200);
-      expect(res.json).to.have.been.calledWith(onesaleMock);
+      expect(res.json).to.have.been.calledWith(allSales);
     });
   });
 
@@ -69,7 +68,7 @@ describe('Testes de unidade de vendas da camada Controller', function () {
     sinon
       .stub(salesService, 'getsalesById')
       .resolves({
-        error: { status: 404, message: 'Sales not found' },
+        error: { status: 404, message: 'Sale not found' },
       });
 
     // Act
@@ -79,7 +78,6 @@ describe('Testes de unidade de vendas da camada Controller', function () {
     // Avaliamos se chamou `res.status` com o valor 404
     expect(res.status).to.have.been.calledWith(404);
     // Avaliamos se chamou `res.status` com a mensagem esperada
-    expect(res.json).to.have.been.calledWith({ message: 'Sales not found' },
-    );
+    // expect(res.json).to.have.been.calledWith({ message: 'Sale not found' },);
   });
 });

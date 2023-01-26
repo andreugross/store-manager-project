@@ -11,12 +11,6 @@ const allSales = [
     quantity: 3,
     date: "2022-03-25T23:02:53.000Z",
   },
-  {
-    saleId: 2,
-    productId: 2,
-    quantity: 2,
-    date: "2023-01-05T12:12:12.000Z",
-  },
 ];
 
 
