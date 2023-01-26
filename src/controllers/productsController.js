@@ -29,7 +29,7 @@ const createProduct = async (req, res) => {
 const updateProduct = async (req, res) => {
   const { id } = req.params;
   const { name } = req.body;
-  await productsService.updateProduct(id, name);
+  await productsService.updateProduct(name, id);
   const products = await productsService.getProductsById(id);
   if (products.error) {
     return res.status(NOT_FOUND).json({ message: 'Product not found' });

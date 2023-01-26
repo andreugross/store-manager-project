@@ -25,8 +25,8 @@ const createProduct = async (name) => {
   return products;
 };
 
-const updateProduct = async (id, name) => {
-  const products = await productsModel.updateProduct(id, name);
+const updateProduct = async (name, id) => {
+  const products = await productsModel.updateProduct(name, id);
   if (!products) return false;
   return products;
 };

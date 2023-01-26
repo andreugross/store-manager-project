@@ -3,7 +3,7 @@ const { expect } = require('chai');
 const { productsModel, connection } = require('../../../src/models');
 const { productsMock, newProduct, uptadeProduct } = require('./mocks/productsModels.mock');
 
-describe('Testes de unidade da camada Model', function () {
+describe('Testes de unidade de produtos da camada Model', function () {
 
   afterEach(function () {
     sinon.restore();
@@ -48,9 +48,9 @@ describe('Testes de unidade da camada Model', function () {
 
       sinon.stub(connection, 'execute').resolves();
 
-      const result = await productsModel.updateProduct(productToUpdate, uptadeProduct);
+      const result = await productsModel.updateProduct(uptadeProduct, productToUpdate);
 
-      expect(result).to.be.deep.equal({ id: productToUpdate, ...uptadeProduct });
+      expect(result).to.be.deep.equal({ id: productToUpdate, name: uptadeProduct });
     })
   })
 });

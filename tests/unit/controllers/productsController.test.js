@@ -8,7 +8,7 @@ const { productsMock, oneProductMock } = require('./mocks/productsController.moc
 const { expect } = chai;
 chai.use(sinonChai);
 
-describe('Testes de unidade da camada Controller', function () {
+describe('Testes de unidade de produtos da camada Controller', function () {
 
   afterEach(function () {
     sinon.restore();
